@@ -560,65 +560,115 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			}
 		}
 	} else{
-		//11. Update User table based on input to correct level
-		switch ($level) {
-		    case 0:
-			    //10b. Graduate the user to the next level, so you dont serve them the same menu
-			     $sql10b = "INSERT INTO `session_levels`(`session_id`, `phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."', 1)";
-			     $db->query($sql10b);
+		//10. Check that user response is not empty
+		if($userResponse==""){
+			//10a. On receiving a Blank. Advise user to input correctly based on level
+			switch ($level) {
+			    case 0:
+				    //10b. Graduate the user to the next level, so you dont serve them the same menu
+				     $sql10b = "INSERT INTO `session_levels`(`session_id`, `phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."', 1)";
+				     $db->query($sql10b);
 
-			     //10c. Insert the phoneNumber, since it comes with the first POST
-			     $sql10c = "INSERT INTO microfinance (`phonenumber`) VALUES ('".$phoneNumber."')";
-			     $db->query($sql10c);
+				     //10c. Insert the phoneNumber, since it comes with the first POST
+				     $sql10c = "INSERT INTO microfinance(`phonenumber`) VALUES ('".$phoneNumber."')";
+				     $db->query($sql10c);
 
-			     //10d. Serve the menu request for name
-			     $response = "CON Please enter your name";
+				     //10d. Serve the menu request for name
+				     $response = "CON Please enter your name";
 
-		  		// Print the response onto the page so that our gateway can read it
-		  		header('Content-type: text/plain');
-			  		echo $response;	
-		    	break;		    
-		    case 1:
-		    	//11b. Update Name, Request for city
-		        $sql11b = "UPDATE microfinance SET `name`='".$userResponse."' WHERE `phonenumber` LIKE '%". $phoneNumber ."%'";
-		        $db->query($sql11b);
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+ 			  		echo $response;	
+			        break;
 
-		        //11c. We graduate the user to the city level
-		        $sql11c = "UPDATE `session_levels` SET `level`=2 WHERE `session_id`='".$sessionId."'";
-		        $db->query($sql11c);
+			    case 1:
+			    	//10e. Request again for name - level has not changed...
+        			$response = "CON Name not supposed to be empty. Please enter your name \n";
 
-		        //We request for the city
-		        $response = "CON Please enter your city";
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+ 			  		echo $response;	
+			        break;
 
-		  		// Print the response onto the page so that our gateway can read it
-		  		header('Content-type: text/plain');
-			  		echo $response;	
-		    	break;
-		    case 2:
-		    	//11d. Update city
-		        $sql11d = "UPDATE microfinance SET `city`='".$userResponse."' WHERE `phonenumber` = '". $phoneNumber ."'";
-		        $db->query($sql11d);
+			    case 2:
+			    	//10f. Request for city again --- level has not changed...
+					$response = "CON City not supposed to be empty. Please reply with your city \n";
 
-		    	//11e. Change level to 0
-	        	$sql11e = "INSERT INTO `session_levels`(`session_id`,`phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."',1)";
-	        	$db->query($sql11e);  
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+ 			  		echo $response;	
+			        break;
 
-				//11f. Serve the menu request for name
-				$response = "END You have been successfully registered.";	        	   	
+			    default:
+			    	//10g. End the session
+					$response = "END Apologies, something went wrong... \n";
 
-		  		// Print the response onto the page so that our gateway can read it
-		  		header('Content-type: text/plain');
-			  	echo $response;	
-		    	break;			        		        		        
-		    default:
-		    	//11g. Request for city again
-				$response = "END Apologies, something went wrong... \n";
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+ 			  		echo $response;	
+			        break;
+			}
+		}else{
+			//11. Update User table based on input to correct level
+			switch ($level) {
+			    case 0:
+				    //10b. Graduate the user to the next level, so you dont serve them the same menu
+				     $sql10b = "INSERT INTO `session_levels`(`session_id`, `phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."', 1)";
+				     $db->query($sql10b);
 
-		  		// Print the response onto the page so that our gateway can read it
-		  		header('Content-type: text/plain');
-			  	echo $response;	
-		    	break;
-		}			
+				     //10c. Insert the phoneNumber, since it comes with the first POST
+				     $sql10c = "INSERT INTO microfinance (`phonenumber`) VALUES ('".$phoneNumber."')";
+				     $db->query($sql10c);
+
+				     //10d. Serve the menu request for name
+				     $response = "CON Please enter your name";
+
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+				  		echo $response;	
+			    	break;		    
+			    case 1:
+			    	//11b. Update Name, Request for city
+			        $sql11b = "UPDATE microfinance SET `name`='".$userResponse."' WHERE `phonenumber` LIKE '%". $phoneNumber ."%'";
+			        $db->query($sql11b);
+
+			        //11c. We graduate the user to the city level
+			        $sql11c = "UPDATE `session_levels` SET `level`=2 WHERE `session_id`='".$sessionId."'";
+			        $db->query($sql11c);
+
+			        //We request for the city
+			        $response = "CON Please enter your city";
+
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+				  		echo $response;	
+			    	break;
+			    case 2:
+			    	//11d. Update city
+			        $sql11d = "UPDATE microfinance SET `city`='".$userResponse."' WHERE `phonenumber` = '". $phoneNumber ."'";
+			        $db->query($sql11d);
+
+			    	//11e. Change level to 0
+		        	$sql11e = "INSERT INTO `session_levels`(`session_id`,`phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."',1)";
+		        	$db->query($sql11e);  
+
+					//11f. Serve the menu request for name
+					$response = "END You have been successfully registered.";	        	   	
+
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+				  	echo $response;	
+			    	break;			        		        		        
+			    default:
+			    	//11g. Request for city again
+					$response = "END Apologies, something went wrong... \n";
+
+			  		// Print the response onto the page so that our gateway can read it
+			  		header('Content-type: text/plain');
+				  	echo $response;	
+			    	break;
+			}	
+		}		
 	} 
 }
 ?>
