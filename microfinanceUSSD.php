@@ -50,8 +50,8 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			        	//Serve our services menu
 						$response = "CON Welcome to Nerd Microfinance, " . $userAvailable['name']  . ". Choose a service.\n";
 						$response .= " 1. Please call me.\n";
-						$response .= " 2. Deposit\n";
-						$response .= " 3. Withdraw\n";
+						$response .= " 2. Deposit Money\n";
+						$response .= " 3. Withdraw Money\n";
 						$response .= " 4. Send Money\n";							
 						$response .= " 5. Buy Airtime\n";
 						$response .= " 6. Repay Loan\n";																	
@@ -205,6 +205,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//9a. Collect Deposit from user, update db
 					switch ($userResponse) {
 					    case "1":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -223,6 +228,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 				        break;	
 
 					    case "2":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -241,6 +251,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 
 					    case "3":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -266,26 +281,40 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 					}				
 		        	break;
-			    case 10:
-			    	//10.a Send Withdrawal to user, update db
-			        $sql11d = "UPDATE `microfinance` SET `city`='".$userResponse."' WHERE `phonenumber` = '". $phoneNumber ."'";
-			        $db->query($sql11d);
-
-			    	//11e. Change level to 0
-		        	$sql11e = "INSERT INTO `session_levels`(`session_id`,`phoneNumber`,`level`) VALUES('".$sessionId."','".$phoneNumber."',1)";
-		        	$db->query($sql11e);   
-
+			    case 10: 
+			    	//Withdraw fund from account
 					switch ($userResponse) {
 					    case "1":
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apiKey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>1,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
-							$recipients  = array($recipient);
-							//Send B2c
-							try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
-							catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}			    	
+					    	//Find account
+							$sql10a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
+							$balQuery=$db->query($sql10a);
+							$balAvailable=$balQuery->fetch_assoc();
+							$newBal = 100;
+							if($balAvailable=$balQuery->fetch_assoc()){
+							// Reduce balance
+							$newBal = --$balAvailable['balance'];					
+							}
+
+							if($newBal > 0){
+
+						    	//Alert user of incoming Mpesa cash
+						    	$response = "END We are sending your withdrawal of\n";
+						    	$response .= " KES 1/- shortly... \n";
+
+								//Declare Params
+								$gateway = new AfricasTalkingGateway($username, $apiKey);
+								$productName  = "Nerd Payments";
+								$currencyCode = "KES";
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>1,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipients  = array($recipient);
+								//Send B2c
+								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
+								catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}	
+							} else {
+						    	//Alert user of insufficient funds
+						    	$response = "END Sorry, you dont have sufficient\n";
+						    	$response .= " funds in your account \n";						
+							}		    	
 
 							// Print the response onto the page so that our gateway can read it
 							header('Content-type: text/plain');
@@ -293,15 +322,36 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 
 					    case "2":
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apiKey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>2,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
-							$recipients  = array($recipient);
-							//Send B2c
-							try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
-							catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}			    	
+					    	//Find account
+							$sql10b = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
+							$balQuery=$db->query($sql10b);
+							$balAvailable=$balQuery->fetch_assoc();
+							$newBal = 100;
+							if($balAvailable=$balQuery->fetch_assoc()){
+							// Reduce balance
+							$newBal = $balAvailable['balance'];	
+							$newBal -= 2;			
+							}
+
+							if($newBal > 0){					    
+						    	//Alert user of incoming Mpesa cash
+						    	$response = "END We are sending your withdrawal of\n";
+						    	$response .= " KES 2/- shortly... \n";
+
+								//Declare Params
+								$gateway = new AfricasTalkingGateway($username, $apiKey);
+								$productName  = "Nerd Payments";
+								$currencyCode = "KES";
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>2,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipients  = array($recipient);
+								//Send B2c
+								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
+								catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}
+							} else {
+						    	//Alert user of insufficient funds
+						    	$response = "END Sorry, you dont have sufficient\n";
+						    	$response .= " funds in your account \n";						
+							}										    	
 
 					  		// Print the response onto the page so that our gateway can read it
 					  		header('Content-type: text/plain');
@@ -309,15 +359,36 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 
 					    case "3":
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apiKey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>3,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
-							$recipients  = array($recipient);
-							//Send B2c
-							try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
-							catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}			    	
+					    	//Find account
+							$sql10c = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
+							$balQuery=$db->query($sql10c);
+							$balAvailable=$balQuery->fetch_assoc();
+							$newBal = 100;
+							if($balAvailable=$balQuery->fetch_assoc()){
+							// Reduce balance
+							$newBal = $balAvailable['balance'];	
+							$newBal -= 3;				
+							}
+
+							if($newBal > 0){					    
+						    	//Alert user of incoming Mpesa cash
+						    	$response = "END We are sending your withdrawal of\n";
+						    	$response .= " KES 3/- shortly... \n";
+
+								//Declare Params
+								$gateway = new AfricasTalkingGateway($username, $apiKey);
+								$productName  = "Nerd Payments";
+								$currencyCode = "KES";
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>3,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipients  = array($recipient);
+								//Send B2c
+								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
+								catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}
+							} else {
+						    	//Alert user of insufficient funds
+						    	$response = "END Sorry, you dont have sufficient\n";
+						    	$response .= " funds in your account \n";						
+							}										    	
 
 					  		// Print the response onto the page so that our gateway can read it
 					  		header('Content-type: text/plain');
@@ -333,7 +404,10 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					} 	        	
 			    	break;	
 			    case 11:
-			    	//11d. Send money to user
+			    	//11d. Send money to person described
+					$response = "END We are sending KES 1/- \n";
+					$response .= "to the loanee shortly. \n";
+
 			    	//Find and update Creditor
 					$sql11d = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 					$balQuery=$db->query($sql11d);
@@ -344,43 +418,52 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					$newBal = --$balAvailable['balance'];					
 					}
 
-			    	//Find and update Debtor
-					$sql11dd = "SELECT * FROM account WHERE phoneNumber LIKE '%".$userResponse."%' LIMIT 1";
-					$loanQuery=$db->query($sql11dd);
-					$newLoan = 10;
-					if($loanAvailable=$loanQuery->fetch_assoc()){
-					$newLoan = ++$loanAvailable['balance'];
-					}				
+					//Send loan only if new balance is above 0 
+					if($newBal > 0){
 
-					// SMS New Balance
-					$code = '20880';
-	            	$recipients = $phoneNumber;
-	            	$message    = "We have sent 1/- to".$userResponse." If this is a wrong number the transaction will fail.
-	            				   Your new balance is ".$newBal.". Thank you.";
-	            	$gateway    = new AfricasTalkingGateway($username, $apikey);
-	            	try { $results = $gateway->sendMessage($recipients, $message, $code); }
-	            	catch ( AfricasTalkingGatewayException $e ) {echo "Encountered an error while sending: ".$e->getMessage(); }
+				    	//Find and update Debtor
+						$sql11dd = "SELECT * FROM account WHERE phoneNumber LIKE '%".$userResponse."%' LIMIT 1";
+						$loanQuery=$db->query($sql11dd);
+						$newLoan = 10;
+						if($loanAvailable=$loanQuery->fetch_assoc()){
+						$newLoan = ++$loanAvailable['balance'];
+						}				
 
-	            	// Update the DB
-			        $sql11e = "UPDATE `account` SET `balance`='".$newBal."' WHERE `phonenumber` = '". $phoneNumber ."'";
-			        $db->query($sql11e);
+						// SMS New Balance
+						$code = '20880';
+		            	$recipients = $phoneNumber;
+		            	$message    = "We have sent 1/- to".$userResponse." If this is a wrong number the transaction will fail.
+		            				   Your new balance is ".$newBal.". Thank you.";
+		            	$gateway    = new AfricasTalkingGateway($username, $apikey);
+		            	try { $results = $gateway->sendMessage($recipients, $message, $code); }
+		            	catch ( AfricasTalkingGatewayException $e ) {echo "Encountered an error while sending: ".$e->getMessage(); }
 
-			    	//11f. Change level to 0
-		        	$sql11f = "INSERT INTO `account` (`loan`,`phoneNumber`) VALUES('".$newLoan."','".$phoneNumber."',1)";
-		        	$db->query($sql11f);   
+		            	// Update the DB
+				        $sql11e = "UPDATE account SET `balance`='".$newBal."' WHERE `phonenumber` = '". $phoneNumber ."'";
+				        $db->query($sql11e);
 
-					//Declare Params
-					$gateway = new AfricasTalkingGateway($username, $apiKey);
-					$productName  = "Nerd Payments";
-					$currencyCode = "KES";
-					$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>1,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
-					$recipients  = array($recipient);
-					//Send B2c
-					try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
-					catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}	
+				    	//11f. Change level to 0
+			        	$sql11f = "INSERT INTO account (`loan`,`phoneNumber`) VALUES('".$newLoan."','".$phoneNumber."',1)";
+			        	$db->query($sql11f);   
 
-					//repsond
-					$response = "END We have sent money to".$userResponse." \n";		    	
+						//Declare Params
+						$gateway = new AfricasTalkingGateway($username, $apiKey);
+						$productName  = "Nerd Payments";
+						$currencyCode = "KES";
+						$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>1,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+						$recipients  = array($recipient);
+						//Send B2c
+						try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
+						catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}	
+
+						//respond
+						$response = "END We have sent money to".$userResponse." \n";	
+
+					} else {
+						//respond
+						$response = "END Sorry we could not send the money. \n";	
+						$response .= "Your dont have enough money. \n";						
+					}	    	
 
 			  		// Print the response onto the page so that our gateway can read it
 			  		header('Content-type: text/plain');
@@ -390,6 +473,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//12. Pay loan
 					switch ($userResponse) {
 					    case "4":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END You are repaying 1/-. We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -408,6 +496,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 				        break;	
 
 					    case "5":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END You are repaying 2/-. We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -426,6 +519,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 
 					    case "6":
+					    	//Alert user of incoming Mpesa checkout
+					    	$response = "END You are repaying 3/-. We have sent the MPESA checkout...\n";
+					    	$response .= "If you dont have a bonga pin, dial \n";
+					    	$response .= "Dial dial *126*5*1# to create.\n";
+
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
