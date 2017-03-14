@@ -47,8 +47,9 @@ mysql> describe microfinance;
 | name          | varchar(30)                  |   YES |     | NULL              |                             |
 | phonenumber   | varchar(20)                  |   YES |     | NULL              |                             |
 | city          | varchar(30)                  |   YES |     | NULL              |                             |
-| validation    | enum('ACTIVE','SUSPENDED')   |   YES |     | NULL              |                             |
+| validation    | varchar(30)                  |   YES |     | NULL              |                             |
 | reg_date      | timestamp                    |   NO  |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+
 6 rows in set (0.02 sec)
 
 mysql> describe session_levels;
@@ -58,6 +59,7 @@ mysql> describe session_levels;
 | session_id    | varchar(50)                  |   YES |     | NULL    |       |
 | phonenumber   | varchar(25)                  |   YES |     | NULL    |       |
 | level         | tinyint(1)                   |   YES |     | NULL    |       |
+
 3 rows in set (0.02 sec)
 
 
