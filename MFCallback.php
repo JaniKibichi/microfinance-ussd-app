@@ -41,8 +41,6 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
 	try { $results = $gateway->sendMessage($recipients, $message, $code); }
 	catch ( AfricasTalkingGatewayException $e ) {echo "Encountered an error while sending: ".$e->getMessage(); }
 
-} else if {
-
 }
 
 

@@ -9,7 +9,7 @@ if ($isActive == 1)  {
   // Compose the response
   $response  = '<?xml version="1.0" encoding="UTF-8"?>';
   $response .= '<Response>';
-  $response .= '<GetDigits timeout="30" finishOnKey="#" callbackUrl="https://b11cd817.ngrok.io/MfUSSD/voiceMenu.php">';
+  $response .= '<GetDigits timeout="30" finishOnKey="#" callbackUrl="https://a543d04e.ngrok.io/MfUSSD/voiceMenu.php">';
   $response .= '<Say>"Thank you for calling. Press 0 to talk to sales, 1 to talk to support or 2 to hear this message again."</Say>';
   $response .= '</GetDigits>';
   $response .= '<Say>"Thank you for calling. Good bye!"</Say>';

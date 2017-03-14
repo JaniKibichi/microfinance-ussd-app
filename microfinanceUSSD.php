@@ -48,7 +48,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			        	$db->query($sql9b);
 
 			        	//Serve our services menu
-						$response = "CON Welcome to Nerd Microfinance, " . $userAvailable['username']  . ". Choose a service.\n";
+						$response = "CON Welcome to Nerd Microfinance, " . $userAvailable['name']  . ". Choose a service.\n";
 						$response .= " 1. Please call me.\n";
 						$response .= " 2. Deposit\n";
 						$response .= " 3. Withdraw\n";
@@ -470,7 +470,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			     $db->query($sql10b);
 
 			     //10c. Insert the phoneNumber, since it comes with the first POST
-			     $sql10c = "INSERT INTO `microfinance`(`phonenumber`) VALUES ('".$phoneNumber."')";
+			     $sql10c = "INSERT INTO microfinance (`phonenumber`) VALUES ('".$phoneNumber."')";
 			     $db->query($sql10c);
 
 			     //10d. Serve the menu request for name
@@ -482,7 +482,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 		    	break;		    
 		    case 1:
 		    	//11b. Update Name, Request for city
-		        $sql11b = "UPDATE `microfinance` SET `name`='".$userResponse."' WHERE `phonenumber` LIKE '%". $phoneNumber ."%'";
+		        $sql11b = "UPDATE microfinance SET `name`='".$userResponse."' WHERE `phonenumber` LIKE '%". $phoneNumber ."%'";
 		        $db->query($sql11b);
 
 		        //11c. We graduate the user to the city level
@@ -498,7 +498,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 		    	break;
 		    case 2:
 		    	//11d. Update city
-		        $sql11d = "UPDATE `microfinance` SET `city`='".$userResponse."' WHERE `phonenumber` = '". $phoneNumber ."'";
+		        $sql11d = "UPDATE microfinance SET `city`='".$userResponse."' WHERE `phonenumber` = '". $phoneNumber ."'";
 		        $db->query($sql11d);
 
 		    	//11e. Change level to 0
