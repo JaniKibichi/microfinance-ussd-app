@@ -3,12 +3,14 @@
 
 - Setting up the logic for USSD is easy with the [Africa's Talking API](docs.africastalking.com/ussd). This is a guide to how to use the code provided on this [repository](https://github.com/JaniKibichi/microfinance-ussd-app) to create a USSD that allows users to get registered and then access a menu of the following services:
 
-| Request to get a call from support        |
-| Deposit Money to user's account           |
-| Withdraw money from users account         |
-| Send money from users account to another  |
-| Repay loan                                |
-| Buy Airtime                               |
+| USSD APP Features                            |
+| --------------------------------------------:| 
+| Request to get a call from support           | 
+| Deposit Money to user's account              |   
+| Withdraw money from users account            |   
+| Send money from users account to another     |   
+| Repay loan                                   |   
+| Buy Airtime                                  |  
 
 ## Prerequisites
 - First, create a config.php file in your root directory and fill in your Africa's Talking API credentials as below.
