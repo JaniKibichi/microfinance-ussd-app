@@ -1,15 +1,16 @@
-#Setting Up a USSD Service for MicroFinance Institutions
-####A step-by-step guide
+# Setting Up a USSD Service for MicroFinance Institutions
+#### A step-by-step guide
 
 - Setting up the logic for USSD is easy with the [Africa's Talking API](docs.africastalking.com/ussd). This is a guide to how to use the code provided on this [repository](https://github.com/JaniKibichi/microfinance-ussd-app) to create a USSD that allows users to get registered and then access a menu of the following services:
-Request to get a call from support
-Deposit Money to user's account
-Withdraw money from users account
-Send money from users account to another 
-Repay loan
-Buy Airtime
 
-##Prerequisites
+| Request to get a call from support        |
+| Deposit Money to user's account           |
+| Withdraw money from users account         |
+| Send money from users account to another  |
+| Repay loan                                |
+| Buy Airtime                               |
+
+## Prerequisites
 - First, create a config.php file in your root directory and fill in your Africa's Talking API credentials as below.
 
 ```PHP
@@ -58,7 +59,7 @@ mysql> describe session_levels;
 3 rows in set (0.02 sec)
 
 
-##Features on the Services List
+## Features on the Services List
 This USSD application has the following user journey.
 
 - The user dials the ussd code - something like `*384*303#`
@@ -67,7 +68,7 @@ This USSD application has the following user journey.
 
 - In case the user is not registered, the application prompts the user for their name and city (with validations), before successfully serving the services menu.
 
-##Code walkthrough
+## Code walkthrough
 This documentation is for the USSD application that lives in https://b11cd817.ngrok.io/MfUSSD/microfinanceUSSD.php.
 
 ```PHP
@@ -99,9 +100,10 @@ The AT USSD gateway keeps chaining the user response. We want to grab the latest
 ```
 
 Interactions with the user can be managed using the received sessionId and a level management process that your application implements as follows.
-The USSD session has a set time limit(20-180 secs based on provider) under which the sessionId does not change. Using this sessionId, it is easy to navigate your user across the USSD menus by graduating their level(menu step) so that you dont serve them the same menu or lose track of where the user is. 
-..* Set the default level to 0 (or your own numbering scheme) -- the home menu.
-..* Check the session_levels table for a user with the same phone number as that received in the HTTP POST. If this exists, the user is returning and they therefore have a stored level. Grab that level and serve that user the right menu. Otherwise, serve the user the home menu.
+
+- The USSD session has a set time limit(20-180 secs based on provider) under which the sessionId does not change. Using this sessionId, it is easy to navigate your user across the USSD menus by graduating their level(menu step) so that you dont serve them the same menu or lose track of where the user is. 
+- Set the default level to 0 (or your own numbering scheme) -- the home menu.
+- Check the session_levels table for a user with the same phone number as that received in the HTTP POST. If this exists, the user is returning and they therefore have a stored level. Grab that level and serve that user the right menu. Otherwise, serve the user the home menu.
 ```PHP
 	//4. Set the default level of the user
 	$level=0;
@@ -773,7 +775,7 @@ If the user is not registered, we use the users level - purely to take the user 
 }
 ?>
 ```
-##Complexities of Voice.
+## Complexities of Voice.
 - The voice service included in this script requires a few juggling acts and probably requires a short review of its own.
 When the user requests a to get a call, the following happens.
 a) The script at https://b11cd817.ngrok.io/MfUSSD/microfinanceUSSD.php requests the call() method through the Africa's Talking Voice Gateway, passing the number to be called and the caller/dialer Id. The call is made and it comes into the users phone. When they answer isActive becomes 1.
