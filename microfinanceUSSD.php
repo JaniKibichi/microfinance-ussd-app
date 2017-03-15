@@ -259,6 +259,12 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//9a. Collect Deposit from user, update db
 					switch ($userResponse) {
 					    case "1":
+				        // Return user to Main Menu & Demote user's level
+				    	$response = "END Kindly wait for the Checkout.\n";
+				    	// Print the response onto the page so that our gateway can read it
+				  		header('Content-type: text/plain');
+	 			  		echo $response;	
+
 					        //message
 					    	$depositMessage ="We have sent the MPESA checkout for KES 5/-... If you dont have a bonga pin, dial *126# to create one.";
 					    	$code = '20880';
@@ -278,6 +284,12 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 				        break;	
 
 					    case "2":
+				        // Return user to Main Menu & Demote user's level
+				    	$response = "END Kindly wait for the Checkout.\n";
+				    	// Print the response onto the page so that our gateway can read it
+				  		header('Content-type: text/plain');
+	 			  		echo $response;	
+
 					        //message
 					    	$depositMessage ="We have sent the MPESA checkout for KES 6/-... If you dont have a bonga pin, dial *126# to create one.";
 					    	$code = '20880';
@@ -298,6 +310,12 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    break;
 
 					    case "3":
+				        // Return user to Main Menu & Demote user's level
+				    	$response = "END Kindly wait for the Checkout.\n";
+				    	// Print the response onto the page so that our gateway can read it
+				  		header('Content-type: text/plain');
+	 			  		echo $response;	
+	 			  							    
 					        //message
 					    	$depositMessage ="We have sent the MPESA checkout for KES 7/-... If you dont have a bonga pin, dial *126# to create one.";
 					    	$code = '20880';
