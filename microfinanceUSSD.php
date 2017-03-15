@@ -260,11 +260,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//9a. Collect Deposit from user, update db
 					switch ($userResponse) {
 					    case "1":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
-
+					        //message
+					    	$depositMessage ="We have sent the MPESA checkout for KES 5/-... If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -274,19 +272,16 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
 
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
 				        break;	
 
 					    case "2":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
+					        //message
+					    	$depositMessage ="We have sent the MPESA checkout for KES 6/-... If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';
 
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
@@ -297,20 +292,16 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);							  
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
-
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
+	
 					    break;
 
 					    case "3":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
-
+					        //message
+					    	$depositMessage ="We have sent the MPESA checkout for KES 7/-... If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
 							$productName  = "Nerd Payments";
@@ -320,12 +311,10 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);							  
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
 
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
 					    break;
 
 					    default:
@@ -403,15 +392,18 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 								//Send B2c
 								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
 								catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}
+						  		// Print the response onto the page so that our gateway can read it
+						  		header('Content-type: text/plain');
+							  	echo $response;									
 							} else {
 						    	//Alert user of insufficient funds
 						    	$response = "END Sorry, you dont have sufficient\n";
-						    	$response .= " funds in your account \n";						
-							}										    	
+						    	$response .= " funds in your account \n";	
 
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-						  	echo $response;	
+						  		// Print the response onto the page so that our gateway can read it
+						  		header('Content-type: text/plain');
+							  	echo $response;							    						
+							}	
 					    break;
 
 					    case "3":
@@ -419,7 +411,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							$sql10c = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 							$balQuery=$db->query($sql10c);
 							$balAvailable=$balQuery->fetch_assoc();
-							$newBal = 100;
+
 							if($balAvailable=$balQuery->fetch_assoc()){
 							// Reduce balance
 							$newBal = $balAvailable['balance'];	
@@ -440,15 +432,17 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 								//Send B2c
 								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
 								catch(AfricasTalkingGatewayException $e){echo "Received error response: ".$e->getMessage();}
+						  		// Print the response onto the page so that our gateway can read it
+						  		header('Content-type: text/plain');
+							  	echo $response;								
 							} else {
 						    	//Alert user of insufficient funds
 						    	$response = "END Sorry, you dont have sufficient\n";
-						    	$response .= " funds in your account \n";						
+						    	$response .= " funds in your account \n";
+						  		// Print the response onto the page so that our gateway can read it
+						  		header('Content-type: text/plain');
+							  	echo $response;						    							
 							}										    	
-
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-						  	echo $response;
 					    break;
 
 					    default:
@@ -531,10 +525,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//12. Pay loan
 					switch ($userResponse) {
 					    case "4":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END You are repaying 5/-. We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
+					        //message
+					    	$depositMessage ="You are repaying 5/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';					    	
 
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
@@ -545,19 +538,15 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
-
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
 				        break;	
 
 					    case "5":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END You are repaying 6/-. We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
+					        //message
+					    	$depositMessage ="You are repaying 6/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';
 
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
@@ -568,19 +557,15 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
-
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
 					    break;
 
 					    case "6":
-					    	//Alert user of incoming Mpesa checkout
-					    	$response = "END You are repaying 7/-. We have sent the MPESA checkout...\n";
-					    	$response .= "If you dont have a bonga pin, dial \n";
-					    	$response .= "Dial dial *126# to create.\n";
+					        //message
+					    	$depositMessage ="You are repaying 7/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
+					    	$code = '20880';
 
 							//Declare Params
 							$gateway = new AfricasTalkingGateway($username, $apikey);
@@ -591,12 +576,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							//pass to gateway
 							try {
 							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
+							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
 							}
 							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
-
-					  		// Print the response onto the page so that our gateway can read it
-					  		header('Content-type: text/plain');
-					  		echo $response;	
 					    break;
 
 					    default:
