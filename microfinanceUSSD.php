@@ -215,11 +215,12 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    		// Find the account
 						$sql7a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 						$BalQuery=$db->query($sql7a);
+						$newBal = 0.00; $newLoan = 0.00;
 
 						if($BalAvailable=$BalQuery->fetch_assoc()){
 						$newBal = $BalAvailable['balance'];
 						$newLoan = $BalAvailable['loan'];
-
+						}
 						//Respond with user Balance
 						$response = "END Your account statement.\n";
 						$response .= "Nerd Microfinance.\n";
@@ -227,8 +228,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 						$response .= "City: ".$userAvailable['city']."\n";	
 						$response .= "Balance: ".$newBal."\n";	
 						$response .= "Loan: ".$newLoan."\n";																													
-						}				
-
+			  			// Print the response onto the page so that our gateway can read it
+			  			header('Content-type: text/plain');
+ 			  			echo $response;	
 			    	}
 			    break;		        				        				        			        		        
 			    default:
