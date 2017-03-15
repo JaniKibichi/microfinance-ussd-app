@@ -2,7 +2,7 @@
 //theUssdDb.php
 //Connection Credentials
 $servername = 'localhost';
-$username = 'graham';
+$username = 'root';
 $password = "";
 $database = "ussd";
 $dbport = 3306;
