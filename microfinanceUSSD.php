@@ -156,7 +156,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 						$sql10a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 						$balQuery=$db->query($sql10a);
 						$balAvailable=$balQuery->fetch_assoc();
-						$newBal = 100;
+
 						if($balAvailable=$balQuery->fetch_assoc()){
 						// Reduce balance
 						$newBal = $balAvailable['balance'];	
@@ -165,8 +165,8 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 
 						if($newBal > 0){			    		
 
-				    		//9e. Send user airtime
-							$response = "END Please wait while we load your account.\n";
+			    		//9e. Send user airtime
+						$response = "END Please wait while we load your account.\n";
 
 							// Search DB and the Send Airtime
 							$recipients = array( array("phoneNumber"=>"".$phoneNumber."", "amount"=>"KES 5") );
@@ -177,15 +177,21 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							try { $results = $gateway->sendAirtime($recipientStringFormat);}
 							catch(AfricasTalkingGatewayException $e){ echo $e->getMessage(); }
 
+			  			// Print the response onto the page so that our gateway can read it
+			  			header('Content-type: text/plain');
+ 			  			echo $response;								
+
 						} else {
-					    	//Alert user of insufficient funds
-					    	$response = "END Sorry, you dont have sufficient\n";
-					    	$response .= " funds in your account \n";						
-						}
+				    	//Alert user of insufficient funds
+				    	$response = "END Sorry, you dont have sufficient\n";
+				    	$response .= " funds in your account \n";	
 
 			  			// Print the response onto the page so that our gateway can read it
 			  			header('Content-type: text/plain');
- 			  			echo $response;	 			    		
+ 			  			echo $response;						    						
+						}
+
+ 			    		
 			    	}
 			        break;
 			    case "6":
