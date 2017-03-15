@@ -37,7 +37,7 @@
           //2d. Redirect to the main IVR...
         $response  = '<?xml version="1.0" encoding="UTF-8"?>';
         $response .= '<Response>';
-        $response .= '<Redirect>https://b11cd817.ngrok.io/voiceCall.php</Redirect>';
+        $response .= '<Redirect>http://62.12.117.25/MF-Ussd-Live/voiceCall.php</Redirect>';
         $response .= '</Response>';
 
         // Print the response onto the page so that our gateway can read it

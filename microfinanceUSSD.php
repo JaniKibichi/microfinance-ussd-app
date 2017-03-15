@@ -213,7 +213,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 						$userAvailable=$userQuery->fetch_assoc();
 
 			    		// Find the account
-						$sql7a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phonenumber."%' LIMIT 1";
+						$sql7a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 						$BalQuery=$db->query($sql7a);
 
 						if($BalAvailable=$BalQuery->fetch_assoc()){
