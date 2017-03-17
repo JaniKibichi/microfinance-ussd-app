@@ -259,78 +259,77 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//9a. Collect Deposit from user, update db
 					switch ($userResponse) {
 					    case "1":
-				        // Return user to Main Menu & Demote user's level
-				    	$response = "END Kindly wait for the Checkout.\n";
+					    //End session
+				    	$response = "END Kindly wait 1 minute for the Checkout.\n";
 				    	// Print the response onto the page so that our gateway can read it
 				  		header('Content-type: text/plain');
 	 			  		echo $response;	
 
-					        //message
-					    	$depositMessage ="We have sent the MPESA checkout for KES 5/-... If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 5;
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+					    //message
+					    $depositMessage ="We have sent the MPESA checkout for KES 5/-... If you dont have a bonga pin, dial *126# to create one.";
+					    $code = '77000';
+						//Declare Params
+						$gateway = new AfricasTalkingGateway($username, $apikey);
+						$amount       = 5;
+						//pass to gateway
+						try {
+						  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
+						}
+						catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}	
+
+						//Create pending record in checkout to be cleared by cronjobs
+			        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+			        	$db->query($sql9aa); 		       	
 
 				        break;	
 
 					    case "2":
-				        // Return user to Main Menu & Demote user's level
-				    	$response = "END Kindly wait for the Checkout.\n";
+				        // End session
+				    	$response = "END Kindly wait 1 minute for the Checkout.\n";
 				    	// Print the response onto the page so that our gateway can read it
 				  		header('Content-type: text/plain');
 	 			  		echo $response;	
 
-					        //message
-					    	$depositMessage ="We have sent the MPESA checkout for KES 6/-... If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';
+					    //message
+					    $depositMessage ="We have sent the MPESA checkout for KES 6/-... If you dont have a bonga pin, dial *126# to create one.";
+					    $code = '77000';
+						//Declare Params
+						$gateway = new AfricasTalkingGateway($username, $apikey);
+						$amount       = 6;
+						//pass to gateway
+						try {
+						  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
+						}
+						catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}	
 
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 6;
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);							  
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+						//Create pending record in checkout to be cleared by cronjobs
+			        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+			        	$db->query($sql9aa); 		       	
 	
 					    break;
 
 					    case "3":
-				        // Return user to Main Menu & Demote user's level
-				    	$response = "END Kindly wait for the Checkout.\n";
+				        // End session
+				    	$response = "END Kindly wait 1 minute for the Checkout.\n";
 				    	// Print the response onto the page so that our gateway can read it
 				  		header('Content-type: text/plain');
 	 			  		echo $response;	
-	 			  							    
-					        //message
-					    	$depositMessage ="We have sent the MPESA checkout for KES 7/-... If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 7;
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);							  
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+
+					    //message
+					    $depositMessage ="We have sent the MPESA checkout for KES 7/-... If you dont have a bonga pin, dial *126# to create one.";
+					    $code = '77000';
+						//Declare Params
+						$gateway = new AfricasTalkingGateway($username, $apikey);
+						$amount       = 7;
+						//pass to gateway
+						try {
+						  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
+						}
+						catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}	
+
+						//Create pending record in checkout to be cleared by cronjobs
+			        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+			        	$db->query($sql9aa); 		       	
 
 					    break;
 
