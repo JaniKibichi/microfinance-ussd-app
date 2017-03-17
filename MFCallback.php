@@ -24,7 +24,6 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
 	$balAvailable=$balQuery->fetch_assoc();
 
 	// Manage balance
-	$newBal = 100;
 	if($balAvailable=$balQuery->fetch_assoc()){
 	$newBal = $value + $balAvailable['balance'];					
 	}
