@@ -1,6 +1,4 @@
 <?php
-require_once('AfricasTalkingGateway.php');
-//Specify your credentials
 	require_once('dbConnector.php');
 	require_once('AfricasTalkingGateway.php');
 	require_once('config.php');
