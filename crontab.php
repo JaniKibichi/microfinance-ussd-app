@@ -14,9 +14,6 @@ $sql = "select * from checkout where status = 'pending' ";
 $statusQuery = $db->query($sql);
 
 while($results = $statusQuery->fetch_assoc()){
-	// Send a request to the gateway to effect checkout. This will happen every 5 minutes?
-	echo $results['phoneNumber'];
-	echo $results['amount'];	
 
 	$gateway = new AfricasTalkingGateway($username, $apikey);
 
@@ -28,7 +25,7 @@ while($results = $statusQuery->fetch_assoc()){
 
 	try {
 	  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
-	  echo "The id here is ".$transactionId."\n";
+	  echo "date now ".date("Y-m-d H:i:s")." -- The id here is ".$transactionId."\n";
 	}
 	catch(AfricasTalkingGatewayException $e){
 	  echo "Received error response: ".$e->getMessage()."\n";
