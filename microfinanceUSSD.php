@@ -265,22 +265,22 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					  		header('Content-type: text/plain');
 		 			  		echo $response;	
 
-							sleep(20);
-
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$amount = 10;
-							$productName  ="Nerd Payments"; 
-							$currencyCode = "KES";
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
-							  echo "The id here is ".$transactionId;
+							if(sleep(20)){
+							
+								$gateway = new AfricasTalkingGateway($username, $apikey);
+								$amount = 10;
+								$productName  ="Nerd Payments"; 
+								$currencyCode = "KES";
+								$metadata     = array("sacco"=>"Nerds","productId"=>"321");
+	
+								try {
+								  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
+								  echo "The id here is ".$transactionId;
+								}
+								catch(AfricasTalkingGatewayException $e){
+								  echo "Received error response: ".$e->getMessage();
+								}						
 							}
-							catch(AfricasTalkingGatewayException $e){
-							  echo "Received error response: ".$e->getMessage();
-							}						
-
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
 				        	$db->query($sql9aa); 
@@ -296,20 +296,21 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					  		header('Content-type: text/plain');
 		 			  		echo $response;	
 
-							sleep(20);
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$amount = 10;							
-							$productName  ="Nerd Payments"; 
-							$currencyCode = "KES";
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
-							  echo "The id here is ".$transactionId;
+							if(sleep(20)){
+								$gateway = new AfricasTalkingGateway($username, $apikey);
+								$amount = 10;							
+								$productName  ="Nerd Payments"; 
+								$currencyCode = "KES";
+								$metadata     = array("sacco"=>"Nerds","productId"=>"321");
+	
+								try {
+								  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
+								  echo "The id here is ".$transactionId;
+								}
+								catch(AfricasTalkingGatewayException $e){
+								  echo "Received error response: ".$e->getMessage();
+								}								
 							}
-							catch(AfricasTalkingGatewayException $e){
-							  echo "Received error response: ".$e->getMessage();
-							}								
 
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
@@ -326,20 +327,21 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					  		header('Content-type: text/plain');
 		 			  		echo $response;	
 
-							sleep(20);
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$amount = 10;							
-							$productName  ="Nerd Payments"; 
-							$currencyCode = "KES";
-							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
-
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
-							  echo "The id here is ".$transactionId;
-							}
-							catch(AfricasTalkingGatewayException $e){
-							  echo "Received error response: ".$e->getMessage();
-							}							
+							if (sleep(20) ){
+								$gateway = new AfricasTalkingGateway($username, $apikey);
+								$amount = 10;							
+								$productName  ="Nerd Payments"; 
+								$currencyCode = "KES";
+								$metadata     = array("sacco"=>"Nerds","productId"=>"321");
+	
+								try {
+								  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
+								  echo "The id here is ".$transactionId;
+								}
+								catch(AfricasTalkingGatewayException $e){
+								  echo "Received error response: ".$e->getMessage();
+								}	
+							}						
 
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
