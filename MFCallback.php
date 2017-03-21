@@ -28,9 +28,12 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
 	$newBal = $value + $balAvailable['balance'];					
 	}
 
-	// Update the DB
+	// Update the DBs
     $sql11e = "UPDATE `account` SET `balance`='".$newBal."' WHERE `phonenumber` = '". $phoneNumber ."'";
     $db->query($sql11e);
+
+    $sql11f = "UPDATE `checkout` SET `status`='received' WHERE `phonenumber` = '". $phoneNumber ."'";
+    $db->query($sql11f);    
 
 		// SMS New Balance
 	$code = '20880';
