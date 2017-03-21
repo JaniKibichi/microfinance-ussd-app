@@ -18,7 +18,7 @@ while($results = $statusQuery->fetch_assoc()){
 	echo $results['phoneNumber'];
 	echo $results['amount'];	
 
-	$gateway = new AfricasTalkingGateway($username, $apikey, "sandbox");
+	$gateway = new AfricasTalkingGateway($username, $apikey);
 
 	$productName  ="Nerd Payments"; 
 	$phoneNumber  = $results['phoneNumber'];;
