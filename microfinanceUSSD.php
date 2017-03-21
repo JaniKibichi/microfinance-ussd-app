@@ -25,8 +25,13 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
   		$level = $result['level'];
 	}	
 
-	//6. Update level accordingly
-	//if($result){  $level = $result['level']; }
+	//6. Create an account and ask questions later
+	$sql6 = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
+	$acQuery=$db->query($sql6);
+	if(!$acAvailable=$acQuery->fetch_assoc()){
+		$sql1A = "INSERT INTO account (`phoneNumber`) VALUES('".$phoneNumber."')";
+		$db->query($sql1A); 
+	}
 
 	//7. Check if the user is in the db
 	$sql7 = "SELECT * FROM microfinance WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
@@ -104,9 +109,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	if($level==1){
 			    		//9e. Ask how much and Launch the Mpesa Checkout to the user
 						$response = "CON How much are you depositing?\n";
-						$response .= " 1. 5 Shillings.\n";
-						$response .= " 2. 6 Shillings.\n";
-						$response .= " 3. 7 Shillings.\n";							
+						$response .= " 1. 19 Shillings.\n";
+						$response .= " 2. 18 Shillings.\n";
+						$response .= " 3. 17 Shillings.\n";							
 
 						//Update sessions to level 9
 				    	$sqlLvl9="UPDATE `session_levels` SET `level`=9 where `session_id`='".$sessionId."'";
@@ -121,9 +126,9 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	if($level==1){
 			    		//9e. Ask how much and Launch B2C to the user
 						$response = "CON How much are you withdrawing?\n";
-						$response .= " 1. 5 Shillings.\n";
-						$response .= " 2. 6 Shillings.\n";
-						$response .= " 3. 7 Shillings.\n";							
+						$response .= " 1. 15 Shillings.\n";
+						$response .= " 2. 16 Shillings.\n";
+						$response .= " 3. 17 Shillings.\n";							
 
 						//Update sessions to level 10
 				    	$sqlLvl10="UPDATE `session_levels` SET `level`=10 where `session_id`='".$sessionId."'";
@@ -138,7 +143,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    case "4":
 			    	if($level==1){
 			    		//9g. Send Another User Some Money
-						$response = "CON You can only send 5 shillings.\n";
+						$response = "CON You can only send 15 shillings.\n";
 						$response .= " Enter a valid phonenumber (like 0722122122)\n";					
 
 						//Update sessions to level 11
@@ -165,7 +170,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							if($newBal > 0){			    		
 
 				    		//9e. Send user airtime
-							$response = "END Please wait while we load your account.\n";
+							$response = "END Please wait while we load your airtime account.\n";
 
 								// Search DB and the Send Airtime
 								$recipients = array( array("phoneNumber"=>"".$phoneNumber."", "amount"=>"KES 5") );
@@ -197,11 +202,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	if($level==1){
 			    		//9e. Ask how much and Launch the Mpesa Checkout to the user
 						$response = "CON How much are you depositing?\n";
-						$response .= " 4. 5 Shilling.\n";
-						$response .= " 5. 6 Shillings.\n";
-						$response .= " 6. 7 Shillings.\n";							
+						$response .= " 4. 15 Shilling.\n";
+						$response .= " 5. 16 Shillings.\n";
+						$response .= " 6. 17 Shillings.\n";							
 
-						//Update sessions to level 9
+						//Update sessions to level 12
 				    	$sqlLvl12="UPDATE `session_levels` SET `level`=12 where `session_id`='".$sessionId."'";
 				    	$db->query($sqlLvl12);
 
@@ -268,10 +273,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 		 			  		$amount=19;
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
-				        	$db->query($sql9aa); 
-
-				        	$sql9ab = "INSERT INTO account (`phoneNumber`) VALUES('".$phoneNumber."')";
-				        	$db->query($sql9ab); 			        			       	
+				        	$db->query($sql9aa); 	        			       	
 				        break;	
 
 					    case "2":
@@ -284,10 +286,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 		 			  		$amount=18;
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
-				        	$db->query($sql9aa); 
-
-				        	$sql9ab = "INSERT INTO account (`phoneNumber`) VALUES('".$phoneNumber."')";
-				        	$db->query($sql9ab); 			        	       	
+				        	$db->query($sql9aa); 		        	       	
 					    break;
 
 					    case "3":
@@ -296,14 +295,11 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					    	// Print the response onto the page so that our gateway can read it
 					  		header('Content-type: text/plain');
 		 			  		echo $response;	
-		 			  		
+
 		 			  		$amount=17;
 							//Create pending record in checkout to be cleared by cronjobs
 				        	$sql9aa = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
-				        	$db->query($sql9aa); 
-
-				        	$sql9ab = "INSERT INTO account (`phoneNumber`) VALUES('".$phoneNumber."')";
-				        	$db->query($sql9ab); 			        		       	
+				        	$db->query($sql9aa); 			        		       	
 					    break;
 
 					    default:
@@ -326,20 +322,20 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							if($balAvailable=$balQuery->fetch_assoc()){
 							// Reduce balance
 							$newBal = $balAvailable['balance'];
-							$newBal -=5;					
+							$newBal -=15;					
 							}
 
 							if($newBal > 0){
 
 						    	//Alert user of incoming Mpesa cash
 						    	$response = "END We are sending your withdrawal of\n";
-						    	$response .= " KES 5/- shortly... \n";
+						    	$response .= " KES 15/- shortly... \n";
 
 								//Declare Params
 								$gateway = new AfricasTalkingGateway($username, $apikey);
 								$productName  = "Nerd Payments";
 								$currencyCode = "KES";
-								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>5,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>15,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
 								$recipients  = array($recipient);
 								//Send B2c
 								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
@@ -364,19 +360,19 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							if($balAvailable=$balQuery->fetch_assoc()){
 							// Reduce balance
 							$newBal = $balAvailable['balance'];	
-							$newBal -= 6;			
+							$newBal -= 16;			
 							}
 
 							if($newBal > 0){					    
 						    	//Alert user of incoming Mpesa cash
 						    	$response = "END We are sending your withdrawal of\n";
-						    	$response .= " KES 6/- shortly... \n";
+						    	$response .= " KES 16/- shortly... \n";
 
 								//Declare Params
 								$gateway = new AfricasTalkingGateway($username, $apikey);
 								$productName  = "Nerd Payments";
 								$currencyCode = "KES";
-								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>6,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>16,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
 								$recipients  = array($recipient);
 								//Send B2c
 								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
@@ -404,19 +400,19 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							if($balAvailable=$balQuery->fetch_assoc()){
 							// Reduce balance
 							$newBal = $balAvailable['balance'];	
-							$newBal -= 7;				
+							$newBal -= 17;				
 							}
 
 							if($newBal > 0){					    
 						    	//Alert user of incoming Mpesa cash
 						    	$response = "END We are sending your withdrawal of\n";
-						    	$response .= " KES 7/- shortly... \n";
+						    	$response .= " KES 17/- shortly... \n";
 
 								//Declare Params
 								$gateway = new AfricasTalkingGateway($username, $apikey);
 								$productName  = "Nerd Payments";
 								$currencyCode = "KES";
-								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>7,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+								$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>17,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
 								$recipients  = array($recipient);
 								//Send B2c
 								try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
@@ -444,7 +440,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	break;	
 			    case 11:
 			    	//11d. Send money to person described
-					$response = "END We are sending KES 5/- \n";
+					$response = "END We are sending KES 15/- \n";
 					$response .= "to the loanee shortly. \n";
 
 			    	//Find and update Creditor
@@ -455,7 +451,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 					if($balAvailable=$balQuery->fetch_assoc()){
 					// Reduce balance
 					$newBal = $balAvailable['balance'];	
-					$newBal -=5;				
+					$newBal -=15;				
 					}
 
 					//Send loan only if new balance is above 0 
@@ -467,13 +463,13 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 
 						if($loanAvailable=$loanQuery->fetch_assoc()){
 						$newLoan = $loanAvailable['balance'];
-						$newLoan += 5;
+						$newLoan += 15;
 						}				
 
 						// SMS New Balance
 						$code = '20880';
 		            	$recipients = $phoneNumber;
-		            	$message    = "We have sent 5/- to".$userResponse." If this is a wrong number the transaction will fail.
+		            	$message    = "We have sent 15/- to".$userResponse." If this is a wrong number the transaction will fail.
 		            				   Your new balance is ".$newBal.". Thank you.";
 		            	$gateway    = new AfricasTalkingGateway($username, $apikey);
 		            	try { $results = $gateway->sendMessage($recipients, $message, $code); }
@@ -491,7 +487,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 						$gateway = new AfricasTalkingGateway($username, $apikey);
 						$productName  = "Nerd Payments";
 						$currencyCode = "KES";
-						$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>5,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
+						$recipient   = array("phoneNumber" => "".$phoneNumber."","currencyCode" => "KES","amount"=>15,"metadata"=>array("name"=>"Client","reason" => "Withdrawal"));
 						$recipients  = array($recipient);
 						//Send B2c
 						try {$responses = $gateway->mobilePaymentB2CRequest($productName, $recipients);}
@@ -514,60 +510,42 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    	//12. Pay loan
 					switch ($userResponse) {
 					    case "4":
-					        //message
-					    	$depositMessage ="You are repaying 5/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';					    	
+						    //End session
+					    	$response = "END Kindly wait 1 minute for the Checkout. You are repaying 15/-..\n";
+					    	// Print the response onto the page so that our gateway can read it
+					  		header('Content-type: text/plain');
+		 			  		echo $response;	
 
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 5;
-							$metadata     = array("Sacco Repayment"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+		 			  		$amount=15;
+							//Create pending record in checkout to be cleared by cronjobs
+				        	$sql12a = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+				        	$db->query($sql12a); 							       	
 				        break;	
 
 					    case "5":
-					        //message
-					    	$depositMessage ="You are repaying 6/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';
+						    //End session
+					    	$response = "END Kindly wait 1 minute for the Checkout. You are repaying 16/-..\n";
+					    	// Print the response onto the page so that our gateway can read it
+					  		header('Content-type: text/plain');
+		 			  		echo $response;	
 
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 6;
-							$metadata     = array("Sacco Repayment"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+		 			  		$amount=16;
+							//Create pending record in checkout to be cleared by cronjobs
+				        	$sql12a = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+				        	$db->query($sql12a); 									       	
 					    break;
 
 					    case "6":
-					        //message
-					    	$depositMessage ="You are repaying 7/-. We have sent the MPESA checkout.If you dont have a bonga pin, dial *126# to create one.";
-					    	$code = '20880';
+						    //End session
+					    	$response = "END Kindly wait 1 minute for the Checkout. You are repaying 17/-..\n";
+					    	// Print the response onto the page so that our gateway can read it
+					  		header('Content-type: text/plain');
+		 			  		echo $response;	
 
-							//Declare Params
-							$gateway = new AfricasTalkingGateway($username, $apikey);
-							$productName  = "Nerd Payments";
-							$currencyCode = "KES";
-							$amount       = 7;
-							$metadata     = array("Sacco Repayment"=>"Nerds","productId"=>"321");
-							//pass to gateway
-							try {
-							  $transactionId = $gateway->initiateMobilePaymentCheckout($productName,$phoneNumber,$currencyCode,$amount,$metadata);
-							  $results = $gateway->sendMessage($phoneNumber, $depositMessage, $code);
-							}
-							catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage();}		       	
+		 			  		$amount=17;
+							//Create pending record in checkout to be cleared by cronjobs
+				        	$sql12a = "INSERT INTO checkout (`status`,`amount`,`phoneNumber`) VALUES('pending','".$amount."','".$phoneNumber."')";
+				        	$db->query($sql12a); 	       	
 					    break;
 
 					    default:
