@@ -268,6 +268,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							sleep(20);
 
 							$gateway = new AfricasTalkingGateway($username, $apikey);
+							$amount = 10;
 							$productName  ="Nerd Payments"; 
 							$currencyCode = "KES";
 							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
@@ -297,6 +298,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 
 							sleep(20);
 							$gateway = new AfricasTalkingGateway($username, $apikey);
+							$amount = 10;							
 							$productName  ="Nerd Payments"; 
 							$currencyCode = "KES";
 							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
@@ -326,6 +328,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 
 							sleep(20);
 							$gateway = new AfricasTalkingGateway($username, $apikey);
+							$amount = 10;							
 							$productName  ="Nerd Payments"; 
 							$currencyCode = "KES";
 							$metadata     = array("sacco"=>"Nerds","productId"=>"321");
