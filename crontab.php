@@ -28,10 +28,10 @@ while($results = $statusQuery->fetch_assoc()){
 
 	try {
 	  $transactionId = $gateway->initiateMobilePaymentCheckout($productName, $phoneNumber,$currencyCode, $amount, $metadata);
-	  echo "The id here is ".$transactionId;
+	  echo "The id here is ".$transactionId."\n";
 	}
 	catch(AfricasTalkingGatewayException $e){
-	  echo "Received error response: ".$e->getMessage();
+	  echo "Received error response: ".$e->getMessage()."\n";
 	}
 
 }
