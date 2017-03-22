@@ -660,7 +660,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 		        	$db->query($sql11e);  
 
 					//11f. Serve the menu request for name
-					$response = "END You have been successfully registered.";	        	   	
+					$response = "END You have been successfully registered. Dial *384*303# to choose a service.";	        	   	
 
 			  		// Print the response onto the page so that our gateway can read it
 			  		header('Content-type: text/plain');
