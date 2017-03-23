@@ -18,7 +18,11 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
    $value       = $data["value"];
    $account     = $data["clientAccount"];
 
-   //store entire AT POST in table called received
+	$valueArray=explode(' ', $value);
+	$valAmt=trim(end($valueArray));   
+
+	//string to int
+	$valAmt=+0;
 
     //Find and update Creditor
 	$sql11d = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
@@ -27,7 +31,7 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
 
 	// Manage balance
 	if($balAvailable=$balQuery->fetch_assoc()){
-	$newBal = $value + $balAvailable['balance'];					
+	$newBal = $valAmt + $balAvailable['balance'];					
 	}
 
 	// Update the DBs

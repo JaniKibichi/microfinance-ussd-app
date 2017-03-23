@@ -188,11 +188,12 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 							$newBal = $balAvailable['balance'];	
 							$newBal -= 5;				
 
-							if($newBal > 0){			    		
-
+							if($newBal > 0){
 				    		//9e. Send user airtime
 							$response = "END Please wait while we load your airtime account.\n";
-
+				  			// Print the response onto the page so that our gateway can read it
+				  			header('Content-type: text/plain');
+	 			  			echo $response;	
 								// Search DB and the Send Airtime
 								$recipients = array( array("phoneNumber"=>"".$phoneNumber."", "amount"=>"KES 5") );
 								//JSON encode
@@ -201,11 +202,6 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 								$gateway = new AfricasTalkingGateway($username, $apikey);    
 								try { $results = $gateway->sendAirtime($recipientStringFormat);}
 								catch(AfricasTalkingGatewayException $e){ echo $e->getMessage(); }
-
-				  			// Print the response onto the page so that our gateway can read it
-				  			header('Content-type: text/plain');
-	 			  			echo $response;								
-
 							} else {
 					    	//Alert user of insufficient funds
 					    	$response = "END Sorry, you dont have sufficient\n";
