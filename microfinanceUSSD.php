@@ -162,7 +162,7 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 						if($balAvailable=$balQuery->fetch_assoc()){
 						// Reduce balance
 						$newBal = $balAvailable['balance'];	
-						$newBal -= 5;				
+						$newBal -= 15;				
 
 						    if($newBal > 0){					    	
 								$gateway = new AfricasTalkingGateway($username, $apiKey);
