@@ -18,6 +18,8 @@ if ( $category == "MobileCheckout" && $status == "Success" ) {
    $value       = $data["value"];
    $account     = $data["clientAccount"];
 
+   //store entire AT POST in table called received
+
     //Find and update Creditor
 	$sql11d = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
 	$balQuery=$db->query($sql11d);

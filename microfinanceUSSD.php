@@ -145,14 +145,35 @@ if(!empty($_POST) && !empty($_POST['phoneNumber'])){
 			    		//9g. Send Another User Some Money
 						$response = "CON You can only send 15 shillings.\n";
 						$response .= " Enter a valid phonenumber (like 0722122122)\n";					
+			  			// Print the response onto the page so that our gateway can read it
+			  			header('Content-type: text/plain');
+ 			  			echo $response;	
 
 						//Update sessions to level 11
 				    	$sqlLvl11="UPDATE `session_levels` SET `level`=11 where `session_id`='".$sessionId."'";
 				    	$db->query($sqlLvl11);
 
-			  			// Print the response onto the page so that our gateway can read it
-			  			header('Content-type: text/plain');
- 			  			echo $response;	 			    		
+				    	//B2C
+				    		//Find account
+						$sql10a = "SELECT * FROM account WHERE phoneNumber LIKE '%".$phoneNumber."%' LIMIT 1";
+						$balQuery=$db->query($sql10a);
+						$balAvailable=$balQuery->fetch_assoc();
+
+						if($balAvailable=$balQuery->fetch_assoc()){
+						// Reduce balance
+						$newBal = $balAvailable['balance'];	
+						$newBal -= 5;				
+
+						    if($newBal > 0){					    	
+								$gateway = new AfricasTalkingGateway($username, $apiKey);
+								$productName  = "Nerd Payments"; $currencyCode = "KES";
+								$recipient1   = array("phoneNumber" => $phoneNumber,"currencyCode" => "KES", "amount"=> 15,"metadata"=>array("name"=> "Clerk","reason" => "May Salary"));
+								$recipients  = array($recipient1);
+								try { $responses = $gateway->mobilePaymentB2CRequest($productName,$recipients); }
+								catch(AfricasTalkingGatewayException $e){ echo "Received error response: ".$e->getMessage(); }											    	
+	 			    		}
+ 			    	   }
+ 			    		
 			    	}
 			        break;
 			    case "5":
