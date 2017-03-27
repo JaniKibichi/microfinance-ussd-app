@@ -168,7 +168,7 @@ if($level==0 || $level==1){
 	        	$db->query($sql9b);
 
 	        	//Serve our services menu
-				$response = "CON Welcome to Nerd Microfinance, " . $userAvailable['username']  . ". Choose a service.\n";
+				$response = "CON Welcome to Nerd Microfinance, " . $userAvailable['name']  . ". Choose a service.\n";
 				$response .= " 1. Please call me.\n";
 				$response .= " 2. Deposit\n";
 				$response .= " 3. Withdraw\n";
