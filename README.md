@@ -62,6 +62,29 @@ mysql> describe session_levels;
 
 3 rows in set (0.02 sec)
 
+mysql> describe account;
+
+| Field         | Type                         | Null  | Key | Default           | Extra                       |
+| ------------- |:----------------------------:| -----:|----:| -----------------:| ---------------------------:|
+| id            | int(6) unsigned              |   YES |     | NULL              |                             |
+| phonenumber   | varchar(20)                  |   YES |     | NULL              |                             |
+| balance       | double(5,2) unsigned zerofill|   YES |     | NULL              |                             |
+| loan          | double(5,2) unsigned zerofill|   YES |     | NULL              |                             |
+| reg_date      | timestamp                    |   NO  |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+
+5 rows in set (0.00 sec)
+
+mysql> describe checkout;
+
+| Field         | Type                         | Null  | Key | Default           | Extra                       |
+| ------------- |:----------------------------:| -----:|----:| -----------------:| ---------------------------:|
+| id            | int(6) unsigned              |   YES |     | NULL              |                             |
+| status        | varchar(30)                  |   YES |     | NULL              |                             |
+| phoneNumber   | varchar(30)                  |   YES |     | NULL              |                             |
+| amount        | int(11)                      |   YES |     | NULL              |                             |
+| reg_date      | timestamp                    |   NO  |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+
+5 rows in set (0.00 sec)
 
 ## Features on the Services List
 This USSD application has the following user journey.
