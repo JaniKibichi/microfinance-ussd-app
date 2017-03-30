@@ -1,5 +1,5 @@
 # Setting Up a USSD Service for MicroFinance Institutions
-#### A step-by-step guide (Dial *384*125# on the sandbox)
+#### A step-by-step guide (Dial * 384 * 125 # on the sandbox)
 
 - Setting up the logic for USSD is easy with the [Africa's Talking API](docs.africastalking.com/ussd). This is a guide to how to use the code provided on this [repository](https://github.com/JaniKibichi/microfinance-ussd-app) to create a USSD that allows users to get registered and then access a menu of the following services:
 
